@@ -1,0 +1,11 @@
+FROM ubuntu:latest
+
+COPY . /app
+WORKDIR /app
+
+RUN apt-get update && apt-get install node npm -y
+RUN npm i -g yarn
+
+RUN yarn && yarn build
+
+CMD ["yarn", "start"]
