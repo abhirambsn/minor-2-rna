@@ -1,11 +1,14 @@
-FROM ubuntu:latest
-
-COPY . /app
+FROM node:18-alpine as builder
 WORKDIR /app
+COPY package.json .
+COPY yarn.lock .
+RUN yarn install
+COPY . .
+RUN yarn build
 
-RUN apt-get update && apt-get install node npm -y
-RUN npm i -g yarn
-
-RUN yarn && yarn build
-
-CMD ["yarn", "start"]
+#Stage 2
+FROM nginx:latest
+WORKDIR /usr/share/nginx/html
+RUN rm -rf ./*
+COPY --from=builder /app/dist .
+ENTRYPOINT [ "nginx", "-g", "daemon off;" ]

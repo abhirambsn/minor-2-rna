@@ -1,0 +1,10 @@
+version: "3.0"
+
+services:
+  app:
+    container_name: minor-2-react
+    image: minor-2-img
+    build:
+      context: .
+    ports:
+      - 8080:80
