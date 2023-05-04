@@ -1,5 +1,5 @@
 {
-  "name": "hardhat-javascript-starter",
+  "name": "bitgive_contract",
   "scripts": {
     "build": "npx thirdweb@latest detect",
     "deploy": "npx thirdweb@latest deploy",
@@ -9,6 +9,7 @@
     "hardhat": "^2.10.1"
   },
   "dependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
     "@thirdweb-dev/contracts": "^3",
     "dotenv": "^16.0.3"
   }

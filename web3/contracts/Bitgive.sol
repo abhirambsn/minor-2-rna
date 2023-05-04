@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-contract CrowdFunding {
+contract Bitgive {
     struct Campaign {
         address owner;
         string title;
@@ -9,17 +9,27 @@ contract CrowdFunding {
         uint256 target;
         uint256 deadline;
         uint256 amountCollected;
-        string image;
+        string imgUrl;
         address[] donators;
         uint256[] donations;
     }
 
     mapping(uint256 => Campaign) public campaigns;
 
-    uint256 public numberOfCampaigns = 0;
+    mapping(address => bool) public ngo;
 
-    function createCampaign(address _owner, string memory _title, string memory _description, uint256 _target, uint256 _deadline, string memory _image) public returns (uint256) {
-        Campaign storage campaign = campaigns[numberOfCampaigns];
+    uint256 public numCampaigns = 0;
+
+    function checkNgo(address _addr) public view returns (bool) {
+        return ngo[_addr];
+    }
+
+    function addToNgo(address _addr) public {
+        ngo[_addr] = true;
+    }
+
+    function createCampaign(address _owner, string memory _title, string memory _description, uint256 _target, uint256 _deadline, string memory _imgUrl) public returns (uint256) {
+        Campaign storage campaign = campaigns[numCampaigns];
 
         require(campaign.deadline < block.timestamp, "The deadline should be a date in the future.");
 
@@ -29,11 +39,11 @@ contract CrowdFunding {
         campaign.target = _target;
         campaign.deadline = _deadline;
         campaign.amountCollected = 0;
-        campaign.image = _image;
+        campaign.imgUrl = _imgUrl;
 
-        numberOfCampaigns++;
+        numCampaigns++;
 
-        return numberOfCampaigns - 1;
+        return numCampaigns - 1;
     }
 
     function donateToCampaign(uint256 _id) public payable {
@@ -56,9 +66,9 @@ contract CrowdFunding {
     }
 
     function getCampaigns() public view returns (Campaign[] memory) {
-        Campaign[] memory allCampaigns = new Campaign[](numberOfCampaigns);
+        Campaign[] memory allCampaigns = new Campaign[](numCampaigns);
 
-        for(uint i = 0; i < numberOfCampaigns; i++) {
+        for(uint i = 0; i < numCampaigns; i++) {
             Campaign storage item = campaigns[i];
 
             allCampaigns[i] = item;

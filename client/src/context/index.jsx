@@ -1,4 +1,4 @@
-import React, { useContext, createContext } from 'react';
+import React, { useContext, createContext, useState, useEffect } from 'react';
 
 import { useAddress, useContract, useMetamask, useContractWrite } from '@thirdweb-dev/react';
 import { ethers } from 'ethers';
@@ -7,11 +7,34 @@ import { EditionMetadataWithOwnerOutputSchema } from '@thirdweb-dev/sdk';
 const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
-  const { contract } = useContract('0xf59A1f8251864e1c5a6bD64020e3569be27e6AA9');
+  // const { contract } = useContract('0xf59A1f8251864e1c5a6bD64020e3569be27e6AA9');
+  const { contract } = useContract('0xaa8d32ce54CAdDb995182D2e4B6A3bcFba790212')
   const { mutateAsync: createCampaign } = useContractWrite(contract, 'createCampaign');
 
   const address = useAddress();
   const connect = useMetamask();
+
+  const [isNgo, setIsNgo] = useState(false);
+
+  const checkNgo = async () => {
+    try {
+      // Done
+      if (!address) return;
+      if (!contract) return;
+      const data = await contract.call('checkNgo', address);
+      setIsNgo(data);
+    } catch (err) {
+      console.error(err);
+      return false
+    }
+  }
+
+  useEffect(() => {
+    ;(async () => {
+      if (!address || !contract) return;
+      await checkNgo();
+    })();
+  }, [isNgo, address, contract])
 
   const publishCampaign = async (form) => {
     try {
@@ -21,7 +44,7 @@ export const StateContextProvider = ({ children }) => {
         form.description, // description
         form.target,
         new Date(form.deadline).getTime(), // deadline,
-        form.image
+        form.imgUrl
       ])
 
       console.log("contract call success", data)
@@ -40,7 +63,7 @@ export const StateContextProvider = ({ children }) => {
       target: ethers.utils.formatEther(campaign.target.toString()),
       deadline: campaign.deadline.toNumber(),
       amountCollected: ethers.utils.formatEther(campaign.amountCollected.toString()),
-      image: campaign.image,
+      imgUrl: campaign.imgUrl,
       pId: i
     }));
 
@@ -88,7 +111,10 @@ export const StateContextProvider = ({ children }) => {
         getCampaigns,
         getUserCampaigns,
         donate,
-        getDonations
+        getDonations,
+        checkNgo,
+        isNgo,
+        setIsNgo
       }}
     >
       {children}

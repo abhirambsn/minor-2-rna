@@ -10,7 +10,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState('dashboard');
   const [toggleDrawer, setToggleDrawer] = useState(false);
-  const { connect, address } = useStateContext();
+  const { connect, address, isNgo } = useStateContext();
 
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
@@ -26,7 +26,7 @@ const Navbar = () => {
         <CustomButton 
           btnType="button"
           title={address ? 'Create a campaign' : 'Connect'}
-          styles={address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]'}
+          styles={`${address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]'} ${(address && !isNgo) && 'bg-gray-800 disabled pointer-events-none opacity-10 cursor-none'}`}
           handleClick={() => {
             if(address) navigate('create-campaign')
             else connect()
