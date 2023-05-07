@@ -98,7 +98,7 @@ export const StateContextProvider = ({ children }) => {
   }
 
   const withdraw = async (pId, amount) => {
-    const data = await contract.call('withdrawFromCampaign', pId, amount);
+    const data = await contract.call('withdrawFromCampaign', pId, ethers.utils.parseEther(amount));
     return data;
   }
 
