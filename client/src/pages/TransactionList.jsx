@@ -20,9 +20,9 @@ const TransactionList = () => {
   const mapType = (typ) => typ === 0 ? "CREDIT" : "DEBIT"
 
   return <div>
-    <table className="text-white table">
-        <thead>
-            <tr>
+    <table className="text-white table-auto">
+        <thead className="p-2 border-b-2 border-gray-50">
+            <tr className="p-2">
                 <th>#</th>
                 <th>Timestamp</th>
                 <th>From</th>
@@ -34,7 +34,7 @@ const TransactionList = () => {
         <tbody>
             {txns && (
                 txns.map((tx, i) => (
-                    <tr>
+                    <tr className="p-4">
                         <td>{i+1}</td>
                         <td>{tx.timestamp}</td>
                         <td>{tx.from}</td>
