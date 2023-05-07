@@ -17,7 +17,7 @@ const CreateCampaign = () => {
     description: '',
     target: '', 
     deadline: '',
-    image: ''
+    imgUrl: ''
   });
 
   const handleFormFieldChange = (fieldName, e) => {
@@ -27,7 +27,7 @@ const CreateCampaign = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    checkIfImage(form.image, async (exists) => {
+    checkIfImage(form.imgUrl, async (exists) => {
       if(exists) {
         setIsLoading(true)
         await createCampaign({ ...form, target: ethers.utils.parseUnits(form.target, 18)})
@@ -35,7 +35,7 @@ const CreateCampaign = () => {
         navigate('/');
       } else {
         alert('Provide valid image URL')
-        setForm({ ...form, image: '' });
+        setForm({ ...form, imgUrl: '' });
       }
     })
   }
@@ -99,8 +99,8 @@ const CreateCampaign = () => {
             labelName="Campaign image *"
             placeholder="Place image URL of your campaign"
             inputType="url"
-            value={form.image}
-            handleChange={(e) => handleFormFieldChange('image', e)}
+            value={form.imgUrl}
+            handleChange={(e) => handleFormFieldChange('imgUrl', e)}
           />
 
           <div className="flex justify-center items-center mt-[40px]">
